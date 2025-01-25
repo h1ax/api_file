@@ -1,0 +1,36 @@
+document.getElementById('inputForm').addEventListener('submit', function(event) {
+    // Ngăn chặn hành động mặc định của form (tránh reload trang)
+    event.preventDefault();
+    document.getElementById('result').value = "Đợi xíu ...";
+    // Lấy giá trị từ các trường nhập liệu
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const level = document.getElementById('level').value;
+    const money = document.getElementById('money').value;
+    const prefix = document.getElementById('prefix').value;
+    const expiry_date = document.getElementById('expiry_date').value;
+
+    // Tạo đối tượng FormData để gửi dữ liệu
+    const formData = new FormData();
+    formData.append('username', username);
+    formData.append('password', password);
+    formData.append('level', level);
+    formData.append('money', money);
+    formData.append('prefix', prefix);
+    formData.append('expiry_date', expiry_date);
+
+    // Gửi dữ liệu đến addadmin.php bằng Fetch API
+    fetch('../../php/addadmin.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text()) // Chờ phản hồi từ server
+    .then(data => {
+        // Hiển thị kết quả trả về trong textarea
+        document.getElementById('result').value = data;
+    })
+    .catch(error => {
+        console.error('Có lỗi xảy ra:', error);
+        document.getElementById('result').value = 'Đã xảy ra lỗi khi gửi dữ liệu.';
+    });
+});
